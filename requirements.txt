@@ -1,0 +1,4 @@
+git+https://github.com/initze/noaaplotter.git
+joblib
+pandas
+numpy
