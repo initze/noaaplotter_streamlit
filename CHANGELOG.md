@@ -1,3 +1,8 @@
+# [0.0.3] - 2023-02-13
+### Added
+- large noaa station list (filtered to good quality)
+#### Changed
+- minor fixes and improvements
 # [0.0.2] - 2023-02-04
 ### Added
 - More control widgets
