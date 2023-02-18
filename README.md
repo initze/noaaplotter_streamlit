@@ -3,8 +3,10 @@ This is a Streamlit app utilizing the noaaplotter package
 
 https://initze-noaaplotter-streamlit-streamlit-app-0yxuqw.streamlit.app/
 
-![image](https://user-images.githubusercontent.com/4864803/215867051-46430cd3-b9b3-4c81-80c9-e0d488ece4f2.png)
+![grafik](https://user-images.githubusercontent.com/4864803/219880315-fb57633e-c2d5-4229-b43e-6484aac0bf53.png)
 
-![image](https://user-images.githubusercontent.com/4864803/215866917-6a2dbdb3-ac38-4427-b749-70f65878f423.png)
+![grafik](https://user-images.githubusercontent.com/4864803/219880333-407a5a18-5aed-4b13-831c-57fdd2f48401.png)
 
+![grafik](https://user-images.githubusercontent.com/4864803/219880354-96ec4808-31c1-4619-9b5f-f42f6ef89733.png)
 
+![grafik](https://user-images.githubusercontent.com/4864803/219880384-bde17a7c-c89d-4ece-8ed2-4d1fe86d58e0.png)
