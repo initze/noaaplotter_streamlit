@@ -35,11 +35,13 @@ end = columns_date[1].date_input(("End Date"), value=datetime.datetime(2022, 12,
 ref_start_date, ref_end_date = get_refperiod_from_widget(refperiod_selector)
 
 # date conversions
+start = date_to_datetime(start)
+end = date_to_datetime(end)
 download_start = to_datestring(min([start, ref_start_date]))
 download_end = to_datestring(max([end, ref_end_date]))
 # convert datetime to date_string
-start_string = to_datestring(date_to_datetime(start))
-end_string = to_datestring(date_to_datetime(end))
+start_string = to_datestring(start)
+end_string = to_datestring(end)
 
 if st.button('Start Process'):
     # debug
