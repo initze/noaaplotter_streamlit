@@ -1,3 +1,8 @@
+# [0.0.4] - 2023-02-18
+#### Changed
+- fixed ERA5 loading
+- minor code improvements
+
 # [0.0.3] - 2023-02-13
 ### Added
 - large noaa station list (filtered to good quality)
