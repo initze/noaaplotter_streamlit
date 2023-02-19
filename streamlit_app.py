@@ -56,6 +56,7 @@ if st.button('Start Process'):
         """ERA5 data loading may take up to 5 minutes"""
         lat, lon = coordinates_field.replace(' ', '').split(',')
         data_file = f'ERA5_{lat}_{lon}.csv'
+        station_name = None
         download_era5_from_gee(float(lat), float(lon), download_end, download_start, data_file)
 
     # plotting
