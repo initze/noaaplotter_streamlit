@@ -2,3 +2,4 @@ git+https://github.com/initze/noaaplotter.git
 joblib
 pandas
 numpy
+matplotlib==3.6
