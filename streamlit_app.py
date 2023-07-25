@@ -6,7 +6,7 @@ import os
 
 from utils import to_datestring, get_refperiod_from_widget, load_stations_from_pickle, date_to_datetime
 
-@st.cache
+#@st.cache
 def main():
     st.title("Climate Data Visualization App")
 
