@@ -50,8 +50,14 @@ if st.button('Start Process'):
         # get stations
         station_id = stations[station_name]
         data_file = f'NOAA_{station_id}.csv'
-        download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
-                           station_id, API_TOKEN, n_jobs=1)
+        n_jobs = 4
+        try:
+            download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
+                               station_id, API_TOKEN, n_jobs=n_jobs)
+        except:
+            n_jobs=1
+            download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
+                   station_id, API_TOKEN, n_jobs=n_jobs)
     elif dataset_selector == 'ERA5':
         """ERA5 data loading may take up to 5 minutes"""
         lat, lon = coordinates_field.replace(' ', '').split(',')
