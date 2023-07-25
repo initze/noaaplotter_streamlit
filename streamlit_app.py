@@ -79,4 +79,8 @@ if st.button('Start Process'):
                                          trailing_mean=12,
                                          show_plot=False,
                                          return_plot=True)
+if st.button('Start Process'):
+    # Rest of the code to download data and create the plot remains the same
+
+    # Display the plot
     st.pyplot(fig=figure, clear_figure=None)
