@@ -34,8 +34,15 @@ def main():
     # date container
     container_date = st.container()
     columns_date = container_date.columns(2)
-    start = columns_date[0].date_input(("Start Date"), value=datetime.datetime(2022, 1, 1), **kwargs_date_picker)
-    end = columns_date[1].date_input(("End Date"), value=datetime.datetime(2022, 12, 31), **kwargs_date_picker)
+    today_datetime = datetime.datetime.today()
+    # Calculate one year before the current date
+    one_year_before = today_datetime.replace(year=today_datetime.year-1) + datetime.timedelta(days=1)
+    
+    # Add one day to the calculated date
+    result_date = one_year_before + datetime.timedelta(days=1)
+    # Dates
+    start = columns_date[0].date_input(("Start Date"), value=one_year_before, **kwargs_date_picker)
+    end = columns_date[1].date_input(("End Date"), value=today_datetime, **kwargs_date_picker)
     ref_start_date, ref_end_date = get_refperiod_from_widget(refperiod_selector)
 
     # date conversions
