@@ -6,7 +6,7 @@ import os
 
 from utils import to_datestring, get_refperiod_from_widget, load_stations_from_pickle, date_to_datetime
 
-@st.cache_data(allow_output_mutation=True)  # Set allow_output_mutation to True for caching mutable objects like dictionaries
+@st.cache_data()  # Set allow_output_mutation to True for caching mutable objects like dictionaries
 def load_data(dataset_selector, download_start, download_end, stations, API_TOKEN, station_name=None, coordinates_field=None):
     if dataset_selector == 'NOAA station':
         # get stations
