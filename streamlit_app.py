@@ -104,7 +104,9 @@ def main():
                                              return_plot=True)
 
         # Display the plot
-        st.pyplot(fig=figure, clear_figure=None)
+        # Create a placeholder to hold the figure
+        figure_placeholder = st.empty()
+        figure_placeholder.pyplot(fig=figure, clear_figure=None)
 
 if __name__ == "__main__":
     main()
