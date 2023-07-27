@@ -6,9 +6,11 @@ import os
 
 from utils import to_datestring, get_refperiod_from_widget, load_stations_from_pickle, date_to_datetime
 
+data_file = ''  # Initialize data_file to empty string
+
 # Custom caching function for the figure generation
 @st.cache(allow_output_mutation=True)
-def generate_figure(dataset_selector, data_file, station_name, ref_start_date, ref_end_date, product_selector, start_string, end_string, infotype_selector):
+def generate_figure(dataset_selector, station_name, ref_start_date, ref_end_date, product_selector, start_string, end_string, infotype_selector):
     n = NOAAPlotter(data_file, location=station_name, climate_filtersize=7,
                     climate_start=ref_start_date, climate_end=ref_end_date)
 
@@ -32,6 +34,8 @@ def generate_figure(dataset_selector, data_file, station_name, ref_start_date, r
     return figure
 
 def main():
+    global data_file  # Use the global data_file variable
+
     st.title("Climate Data Visualization App")
 
     path = 'stations.z'
@@ -41,6 +45,7 @@ def main():
     # containers
     container_selectors = st.container()
     columns_main = container_selectors.columns(2)
+
     # widgets
     dataset_selector = columns_main[0].selectbox('Choose your data source type', ['NOAA station', 'ERA5'])
     refperiod_selector = columns_main[0].selectbox('Choose your climate reference period', ['1981-2010', '1991-2020'])
@@ -78,33 +83,30 @@ def main():
     start_string = to_datestring(start)
     end_string = to_datestring(end)
 
-    data_file = ''  # Initialize data_file to empty string
-    if dataset_selector == 'NOAA station':
-        station_id = stations[station_name]
-        data_file = f'NOAA_{station_id}.csv'
-        n_jobs = 4
-        try:
-            download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
-                               station_id, API_TOKEN, n_jobs=n_jobs)
-        except:
-            n_jobs=1
-            download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
-                   station_id, API_TOKEN, n_jobs=n_jobs)
-    elif dataset_selector == 'ERA5':
-        lat, lon = coordinates_field.replace(' ', '').split(',')
-        data_file = f'ERA5_{lat}_{lon}.csv'
-        station_name = None
-        download_era5_from_gee(float(lat), float(lon), download_end, download_start, data_file)
-
     if st.button('Start Process'):
+        # Update data_file within the button block
+        if dataset_selector == 'NOAA station':
+            station_id = stations[station_name]
+            data_file = f'NOAA_{station_id}.csv'
+            n_jobs = 4
+            try:
+                download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
+                                   station_id, API_TOKEN, n_jobs=n_jobs)
+            except:
+                n_jobs = 1
+                download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
+                                   station_id, API_TOKEN, n_jobs=n_jobs)
+        elif dataset_selector == 'ERA5':
+            lat, lon = coordinates_field.replace(' ', '').split(',')
+            data_file = f'ERA5_{lat}_{lon}.csv'
+            station_name = None
+            download_era5_from_gee(float(lat), float(lon), download_end, download_start, data_file)
+
         # Call the custom caching function to generate the figure
-        figure = generate_figure(dataset_selector, data_file, station_name, ref_start_date, ref_end_date, product_selector, start_string, end_string, infotype_selector)
+        figure = generate_figure(dataset_selector, station_name, ref_start_date, ref_end_date, product_selector, start_string, end_string, infotype_selector)
 
         # Create a placeholder to hold the figure
         figure_placeholder = st.empty()
 
         # Display the plot inside the placeholder
-        figure_placeholder.pyplot(fig=figure, clear_figure=None)
-
-if __name__ == "__main__":
-    main()
+        figure_placeholder.pyplot(fig=figure, clear_figure=None
