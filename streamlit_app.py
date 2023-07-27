@@ -54,7 +54,13 @@ def main():
     start_string = to_datestring(start)
     end_string = to_datestring(end)
 
+    # Introduce a variable to keep track of whether "Start Process" button has been pressed
+    process_started = False
     if st.button('Start Process'):
+        # Set the flag to indicate that the "Start Process" button has been pressed
+        process_started = True
+    
+    if process_started:
         # debug
         # download data
         if dataset_selector == 'NOAA station':
