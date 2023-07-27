@@ -7,7 +7,7 @@ import os
 from utils import to_datestring, get_refperiod_from_widget, load_stations_from_pickle, date_to_datetime
 
 @st.cache(allow_output_mutation=True)  # Set allow_output_mutation to True for caching mutable objects like dictionaries
-def load_data(dataset_selector, download_start, download_end, stations, station_name=None, coordinates_field=None):
+def load_data(dataset_selector, download_start, download_end, stations, API_TOKEN, station_name=None, coordinates_field=None):
     if dataset_selector == 'NOAA station':
         # get stations
         station_id = stations[station_name]
@@ -86,7 +86,7 @@ def main():
 
     if st.session_state.process_started:
         # Load the data using the cached function and pass 'stations' as an argument
-        data_file, station_name = load_data(dataset_selector, download_start, download_end, stations, station_name, coordinates_field)
+        data_file, station_name = load_data(dataset_selector, download_start, download_end, stations, API_TOKEN, station_name, coordinates_field)
         
         # plotting
         n = NOAAPlotter(data_file, location=station_name, climate_filtersize=7,
