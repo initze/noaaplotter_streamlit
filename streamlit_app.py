@@ -6,7 +6,49 @@ import os
 
 from utils import to_datestring, get_refperiod_from_widget, load_stations_from_pickle, date_to_datetime
 
-#@st.cache
+# Custom caching function for the figure generation
+@st.cache(allow_output_mutation=True)
+def generate_figure(dataset_selector, data_file, station_name, ref_start_date, ref_end_date, product_selector, start_string, end_string, infotype_selector):
+    n = NOAAPlotter(data_file, location=station_name, climate_filtersize=7,
+                    climate_start=ref_start_date, climate_end=ref_end_date)
+    
+    if dataset_selector == 'NOAA station':
+        station_id = stations[station_name]
+        data_file = f'NOAA_{station_id}.csv'
+        n_jobs = 4
+        try:
+            download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
+                               station_id, API_TOKEN, n_jobs=n_jobs)
+        except:
+            n_jobs=1
+            download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
+                   station_id, API_TOKEN, n_jobs=n_jobs)
+        
+    elif dataset_selector == 'ERA5':
+        lat, lon = coordinates_field.replace(' ', '').split(',')
+        data_file = f'ERA5_{lat}_{lon}.csv'
+        station_name = None
+        download_era5_from_gee(float(lat), float(lon), download_end, download_start, data_file)
+
+    if product_selector == 'daily':
+        figure = n.plot_weather_series(start_date=start_string,
+                                       end_date=end_string,
+                                       show_snow_accumulation=False,
+                                       plot_extrema=True,
+                                       show_plot=False,
+                                       title=station_name,
+                                       return_plot=True)
+    else:
+        figure = n.plot_monthly_barchart(start_date=start_string,
+                                         end_date=end_string,
+                                         information=infotype_selector,
+                                         anomaly=True,
+                                         trailing_mean=12,
+                                         show_plot=False,
+                                         return_plot=True)
+
+    return figure
+
 def main():
     st.title("Climate Data Visualization App")
 
@@ -54,60 +96,14 @@ def main():
     start_string = to_datestring(start)
     end_string = to_datestring(end)
 
-    # Check if the 'process_started' key exists in st.session_state
-    if 'process_started' not in st.session_state:
-        st.session_state.process_started = False
-
     if st.button('Start Process'):
-        # Set the flag to indicate that the "Start Process" button has been pressed
-        st.session_state.process_started = True
-    
-    if st.session_state.process_started:
-        # debug
-        # download data
-        if dataset_selector == 'NOAA station':
-            # get stations
-            station_id = stations[station_name]
-            data_file = f'NOAA_{station_id}.csv'
-            n_jobs = 4
-            try:
-                download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
-                                   station_id, API_TOKEN, n_jobs=n_jobs)
-            except:
-                n_jobs=1
-                download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
-                       station_id, API_TOKEN, n_jobs=n_jobs)
-        elif dataset_selector == 'ERA5':
-            """ERA5 data loading may take up to 5 minutes"""
-            lat, lon = coordinates_field.replace(' ', '').split(',')
-            data_file = f'ERA5_{lat}_{lon}.csv'
-            station_name = None
-            download_era5_from_gee(float(lat), float(lon), download_end, download_start, data_file)
+        # Call the custom caching function to generate the figure
+        figure = generate_figure(dataset_selector, data_file, station_name, ref_start_date, ref_end_date, product_selector, start_string, end_string, infotype_selector)
 
-        # plotting
-        n = NOAAPlotter(data_file, location=station_name, climate_filtersize=7,
-                        climate_start=ref_start_date, climate_end=ref_end_date)
-        if product_selector == 'daily':
-            figure = n.plot_weather_series(start_date=start_string,
-                                           end_date=end_string,
-                                           show_snow_accumulation=False,
-                                           plot_extrema=True,
-                                           show_plot=False,
-                                           title=station_name,
-                                           return_plot=True)
-
-        else:
-            figure = n.plot_monthly_barchart(start_date=start_string,
-                                             end_date=end_string,
-                                             information=infotype_selector,
-                                             anomaly=True,
-                                             trailing_mean=12,
-                                             show_plot=False,
-                                             return_plot=True)
-
-        # Display the plot
         # Create a placeholder to hold the figure
         figure_placeholder = st.empty()
+
+        # Display the plot inside the placeholder
         figure_placeholder.pyplot(fig=figure, clear_figure=None)
 
 if __name__ == "__main__":
