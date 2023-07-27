@@ -6,6 +6,28 @@ import os
 
 from utils import to_datestring, get_refperiod_from_widget, load_stations_from_pickle, date_to_datetime
 
+@st.cache(allow_output_mutation=True)  # Set allow_output_mutation to True for caching mutable objects like dictionaries
+def load_data(dataset_selector, download_start, download_end, station_name=None, coordinates_field=None):
+    if dataset_selector == 'NOAA station':
+        # get stations
+        station_id = stations[station_name]
+        data_file = f'NOAA_{station_id}.csv'
+        n_jobs = 4
+        try:
+            download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
+                               station_id, API_TOKEN, n_jobs=n_jobs)
+        except:
+            n_jobs = 1
+            download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
+                   station_id, API_TOKEN, n_jobs=n_jobs)
+    elif dataset_selector == 'ERA5':
+        """ERA5 data loading may take up to 5 minutes"""
+        lat, lon = coordinates_field.replace(' ', '').split(',')
+        data_file = f'ERA5_{lat}_{lon}.csv'
+        station_name = None
+        download_era5_from_gee(float(lat), float(lon), download_end, download_start, data_file)
+    return data_file, station_name
+
 #@st.cache
 def main():
     st.title("Climate Data Visualization App")
@@ -61,28 +83,10 @@ def main():
     if st.button('Start Process'):
         # Set the flag to indicate that the "Start Process" button has been pressed
         st.session_state.process_started = True
-    
+
     if st.session_state.process_started:
-        # debug
-        # download data
-        if dataset_selector == 'NOAA station':
-            # get stations
-            station_id = stations[station_name]
-            data_file = f'NOAA_{station_id}.csv'
-            n_jobs = 4
-            try:
-                download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
-                                   station_id, API_TOKEN, n_jobs=n_jobs)
-            except:
-                n_jobs=1
-                download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
-                       station_id, API_TOKEN, n_jobs=n_jobs)
-        elif dataset_selector == 'ERA5':
-            """ERA5 data loading may take up to 5 minutes"""
-            lat, lon = coordinates_field.replace(' ', '').split(',')
-            data_file = f'ERA5_{lat}_{lon}.csv'
-            station_name = None
-            download_era5_from_gee(float(lat), float(lon), download_end, download_start, data_file)
+        # Load the data using the cached function
+        data_file, station_name = load_data(dataset_selector, download_start, download_end, station_name, coordinates_field)
 
         # plotting
         n = NOAAPlotter(data_file, location=station_name, climate_filtersize=7,
@@ -95,7 +99,6 @@ def main():
                                            show_plot=False,
                                            title=station_name,
                                            return_plot=True)
-
         else:
             figure = n.plot_monthly_barchart(start_date=start_string,
                                              end_date=end_string,
@@ -109,6 +112,6 @@ def main():
         # Create a placeholder to hold the figure
         figure_placeholder = st.empty()
         figure_placeholder.pyplot(fig=figure, clear_figure=None)
-
+        
 if __name__ == "__main__":
     main()
