@@ -1,7 +1,7 @@
 # noaaplotter_streamlit
 This is a Streamlit app utilizing the noaaplotter package
 
-https://initze-noaaplotter-streamlit-streamlit-app-0yxuqw.streamlit.app/
+**App Link:** [https://noaaplotter.streamlit.app/](https://noaaplotter.streamlit.app/)
 
 ![grafik](https://user-images.githubusercontent.com/4864803/219880315-fb57633e-c2d5-4229-b43e-6484aac0bf53.png)
 
