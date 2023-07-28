@@ -35,7 +35,7 @@ def main():
     columns_date = container_date.columns(2)
 
     # Add one day to the calculated date
-    today_datetime, result_date = get_currentdate_and_lastyear
+    today_datetime, result_date = get_currentdate_and_lastyear()
     
     # Dates
     start = columns_date[0].date_input(("Start Date"), value=one_year_before, **kwargs_date_picker)
