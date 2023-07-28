@@ -12,7 +12,8 @@ def main():
     path = 'stations.z'
     stations = load_stations_from_pickle(path)
 
-    API_TOKEN = os.environ['NOAA_API_TOKEN']
+    #API_TOKEN = os.environ['NOAA_API_TOKEN']
+    API_TOKEN = "LaVQzwUgOBQLBRwoTpOLyRbIKDTHAVVe"
     # containers
     container_selectors = st.container()
     columns_main = container_selectors.columns(2)
@@ -38,7 +39,7 @@ def main():
     today_datetime, result_date = get_currentdate_and_lastyear()
     
     # Dates
-    start = columns_date[0].date_input(("Start Date"), value=one_year_before, **kwargs_date_picker)
+    start = columns_date[0].date_input(("Start Date"), value=result_date, **kwargs_date_picker)
     end = columns_date[1].date_input(("End Date"), value=today_datetime, **kwargs_date_picker)
     ref_start_date, ref_end_date = get_refperiod_from_widget(refperiod_selector)
 
