@@ -1,6 +1,5 @@
 import streamlit as st
 from noaaplotter.download_utils import download_from_noaa, download_era5_from_gee
-import datetime
 from noaaplotter.noaaplotter import NOAAPlotter
 import os
 
@@ -30,7 +29,7 @@ def main():
         'Choose your Information Type (monthly only)', ['Temperature', 'Precipitation'], disabled=False)
 
     # Date stuff
-    kwargs_date_picker = dict(min_value=datetime.datetime(1920, 1, 1))
+    kwargs_date_picker = dict(min_value=datetime(1920, 1, 1))
     # date container
     container_date = st.container()
     columns_date = container_date.columns(2)
