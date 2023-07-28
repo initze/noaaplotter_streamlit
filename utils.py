@@ -72,7 +72,7 @@ def load_data(dataset_selector, download_start, download_end, stations, API_TOKE
     return data_file, station_name
 
 def get_currentdate_and_lastyear():
-    today_datetime = datetime.datetime.today()
+    today_datetime = datetime.today()
     # Calculate one year before the current date
     one_year_before = today_datetime.replace(year=today_datetime.year-1) + datetime.timedelta(days=1)
     # Add one day to the calculated date
