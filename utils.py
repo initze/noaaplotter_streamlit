@@ -71,11 +71,19 @@ def load_data(dataset_selector, download_start, download_end, stations, API_TOKE
         download_era5_from_gee(float(lat), float(lon), download_end, download_start, data_file)
     return data_file, station_name
 
-def get_currentdate_and_lastyear():
+def get_daily_dates():
+    start_date = datetime.datetime.today()
+    # Calculate one year before the current date
+    one_year_before = start_date.replace(year=start_date.year-1) + datetime.timedelta(days=1)
+    # Add one day to the calculated date
+    end_date = one_year_before + datetime.timedelta(days=1)
+    
+    return start_date, end_date
+
+def get_monthly_dates(years=20):
     today_datetime = datetime.datetime.today()
     # Calculate one year before the current date
-    one_year_before = today_datetime.replace(year=today_datetime.year-1) + datetime.timedelta(days=1)
-    # Add one day to the calculated date
-    result_date = one_year_before + datetime.timedelta(days=1)
+    end_date = today_datetime.replace(day=1) + datetime.timedelta(days=-1)
+    start_date = today_datetime.replace(day=1).replace(year=today_datetime.year-years)
     
-    return today_datetime, result_date
+    return start_date, end_date

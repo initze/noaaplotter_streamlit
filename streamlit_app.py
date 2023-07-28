@@ -1,5 +1,5 @@
 import streamlit as st
-from noaaplotter.download_utils import download_from_noaa, download_era5_from_gee
+
 from noaaplotter.noaaplotter import NOAAPlotter
 import os
 
@@ -12,8 +12,8 @@ def main():
     path = 'stations.z'
     stations = load_stations_from_pickle(path)
 
-    #API_TOKEN = os.environ['NOAA_API_TOKEN']
-    API_TOKEN = "LaVQzwUgOBQLBRwoTpOLyRbIKDTHAVVe"
+    API_TOKEN = os.environ['NOAA_API_TOKEN']
+    
     # containers
     container_selectors = st.container()
     columns_main = container_selectors.columns(2)
@@ -35,12 +35,15 @@ def main():
     container_date = st.container()
     columns_date = container_date.columns(2)
 
-    # Add one day to the calculated date
-    today_datetime, result_date = get_currentdate_and_lastyear()
+    # Auto generation of start and end dates depending on product period
+    if product_selector == 'daily':
+        datetime_start, datetime_end = get_daily_dates()
+    else:
+        datetime_start, datetime_end = get_monthly_dates()
     
     # Dates
-    start = columns_date[0].date_input(("Start Date"), value=result_date, **kwargs_date_picker)
-    end = columns_date[1].date_input(("End Date"), value=today_datetime, **kwargs_date_picker)
+    start = columns_date[0].date_input(("Start Date"), value=datetime_start, **kwargs_date_picker)
+    end = columns_date[1].date_input(("End Date"), value=datetime_end, **kwargs_date_picker)
     ref_start_date, ref_end_date = get_refperiod_from_widget(refperiod_selector)
 
     # date conversions
