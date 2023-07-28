@@ -1,16 +1,17 @@
-from datetime import datetime, date
+#from datetime import datetime, date
+import datetime
 import pandas as pd
 
 import streamlit as st
 
 
 def date_picker_start(label):
-    today = st.date_input(label, value=datetime(2022, 1, 1))
+    today = st.date_input(label, value=datetime.datetime(2022, 1, 1))
     return today
 
 
 def date_picker_end(label):
-    current_date = date.today()
+    current_date = datetime.date.today()
     today = st.date_input(label, value=current_date)
     return today
 
@@ -21,13 +22,13 @@ def location_selector(my_dict):
 
 
 def to_datestring(date):
-    return datetime.strftime(date, '%Y-%m-%d')
+    return datetime.datetime.strftime(date, '%Y-%m-%d')
 
 
 def get_refperiod_from_widget(period_string):
     ref_start, ref_end = period_string.split('-')
-    ref_start_date = datetime(int(ref_start), 1, 1)
-    ref_end_date = datetime(int(ref_end), 12, 31)
+    ref_start_date = datetime.datetime(int(ref_start), 1, 1)
+    ref_end_date = datetime.datetime(int(ref_end), 12, 31)
     return ref_start_date, ref_end_date
 
 
@@ -46,7 +47,7 @@ def load_stations_from_pickle(link):
 
 
 def date_to_datetime(input_date):
-    return datetime(input_date.year, input_date.month, input_date.day)
+    return datetime.datetime(input_date.year, input_date.month, input_date.day)
 
 
 @st.cache_data()  # Set allow_output_mutation to True for caching mutable objects like dictionaries
@@ -72,7 +73,7 @@ def load_data(dataset_selector, download_start, download_end, stations, API_TOKE
     return data_file, station_name
 
 def get_currentdate_and_lastyear():
-    today_datetime = datetime.today()
+    today_datetime = datetime.datetime.today()
     # Calculate one year before the current date
     one_year_before = today_datetime.replace(year=today_datetime.year-1) + datetime.timedelta(days=1)
     # Add one day to the calculated date
