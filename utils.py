@@ -72,11 +72,11 @@ def load_data(dataset_selector, download_start, download_end, stations, API_TOKE
     return data_file, station_name
 
 def get_daily_dates():
-    start_date = datetime.datetime.today()
+    end_date = datetime.datetime.today()
     # Calculate one year before the current date
-    one_year_before = start_date.replace(year=start_date.year-1) + datetime.timedelta(days=1)
+    one_year_before = end_date.replace(year=end_date.year-1) + datetime.timedelta(days=1)
     # Add one day to the calculated date
-    end_date = one_year_before + datetime.timedelta(days=1)
+    start_date = one_year_before + datetime.timedelta(days=1)
     
     return start_date, end_date
 
