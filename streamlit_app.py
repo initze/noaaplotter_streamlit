@@ -78,19 +78,29 @@ def main():
                                            show_plot=False,
                                            title=station_name,
                                            return_plot=True)
+            # Display the plot
+            figure_placeholder = st.empty()
+            figure_placeholder.pyplot(fig=figure, clear_figure=None)
         else:
-            figure = n.plot_monthly_barchart(start_date=start_string,
+            figure_t = n.plot_monthly_barchart(start_date=start_string,
                                              end_date=end_string,
-                                             information=infotype_selector,
+                                             information='Temperature',
                                              anomaly=True,
                                              trailing_mean=12,
                                              show_plot=False,
                                              return_plot=True)
+            
+            figure_p = n.plot_monthly_barchart(start_date=start_string,
+                                             end_date=end_string,
+                                             information='Precipitation',
+                                             anomaly=True,
+                                             trailing_mean=12,
+                                             show_plot=False,
+                                             return_plot=True)
+            st.pyplot(fig=figure_t, clear_figure=None)
+            st.pyplot(fig=figure_p, clear_figure=None)
 
-        # Display the plot
-        # Create a placeholder to hold the figure
-        figure_placeholder = st.empty()
-        figure_placeholder.pyplot(fig=figure, clear_figure=None)
+
         
 if __name__ == "__main__":
     main()
