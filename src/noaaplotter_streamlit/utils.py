@@ -55,14 +55,14 @@ def load_data(dataset_selector, download_start, download_end, stations, API_TOKE
         # get stations
         station_id = stations[station_name]
         data_file = f'NOAA_{station_id}.csv'
-        n_jobs = 4
+        n_jobs = 2
         try:
             download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
                                station_id, API_TOKEN, n_jobs=n_jobs)
         except:
             n_jobs = 1
             download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
-                   station_id, API_TOKEN, n_jobs=n_jobs)
+                   station_id, API_TOKEN)
     elif dataset_selector == 'ERA5':
         """ERA5 data loading may take up to 5 minutes"""
         lat, lon = coordinates_field.replace(' ', '').split(',')
