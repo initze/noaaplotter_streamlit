@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "noaaplotter_streamlit"
+version = "0.0.10"
+description = "This is a Streamlit app utilizing the noaaplotter package"
+requires-python = ">=3.9"
+dependencies = [
+    "streamlit",
+    "joblib",
+    "pandas",
+    "numpy",
+    "matplotlib==3.6",
+    "noaaplotter @ git+https://github.com/initze/noaaplotter.git@0.5.1"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
