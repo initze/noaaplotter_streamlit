@@ -2,7 +2,7 @@
 import datetime
 import pandas as pd
 import streamlit as st
-from noaaplotter.download_utils import download_from_noaa, download_era5_from_gee
+from noaaplotter.utils.download_utils import download_from_noaa, download_era5_from_gee
 
 def date_picker_start(label):
     today = st.date_input(label, value=datetime.datetime(2022, 1, 1))
@@ -55,7 +55,7 @@ def load_data(dataset_selector, download_start, download_end, stations, API_TOKE
         # get stations
         station_id = stations[station_name]
         data_file = f'NOAA_{station_id}.csv'
-        n_jobs = 2
+        n_jobs = 3
         try:
             download_from_noaa(data_file, download_start, download_end, ['TMIN', 'TMAX', 'PRCP', 'SNOW'], station_name,
                                station_id, API_TOKEN, n_jobs=n_jobs)

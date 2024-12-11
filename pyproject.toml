@@ -11,7 +11,7 @@ dependencies = [
     "streamlit==1.41",
     "jupyterlab",
     "ipython",
-    "noaaplotter @ git+https://github.com/initze/noaaplotter.git@v052_dev"
+    "noaaplotter @ git+https://github.com/initze/noaaplotter.git@v0.5.3"
 ]
 
 [tool.setuptools.packages.find]
