@@ -8,7 +8,7 @@ version = "0.0.10"
 description = "This is a Streamlit app utilizing the noaaplotter package"
 requires-python = ">=3.10"
 dependencies = [
-    "streamlit==1.41",
+    "streamlit>=1.40",
     # "jupyterlab",
     # "ipython",
     "noaaplotter @ git+https://github.com/initze/noaaplotter.git@v0.5.3",
