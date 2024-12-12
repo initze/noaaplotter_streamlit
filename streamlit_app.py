@@ -6,7 +6,7 @@ import os
 try:
     from noaaplotter_streamlit.utils import *
 except:
-    from scr.noaaplotter_streamlit.utils import
+    from scr.noaaplotter_streamlit.utils import *
 
 
 def main():
