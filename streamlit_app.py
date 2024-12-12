@@ -3,7 +3,10 @@ import streamlit as st
 from noaaplotter.noaaplotter import NOAAPlotter
 import os
 
-from noaaplotter_streamlit.utils import *
+try:
+    from noaaplotter_streamlit.utils import *
+except:
+    from scr.noaaplotter_streamlit.utils import
 
 
 def main():
