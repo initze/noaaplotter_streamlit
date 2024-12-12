@@ -1,0 +1,2 @@
+streamlit==1.41
+noaaplotter @ git+https://github.com/initze/noaaplotter.git@v0.5.3
