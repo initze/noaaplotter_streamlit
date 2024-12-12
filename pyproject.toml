@@ -6,11 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "noaaplotter_streamlit"
 version = "0.0.10"
 description = "This is a Streamlit app utilizing the noaaplotter package"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = [
     "streamlit>=1.40",
-    # "jupyterlab",
-    # "ipython",
     "noaaplotter @ git+https://github.com/initze/noaaplotter.git",
     "numpy>=2.2,<3",
 ]
