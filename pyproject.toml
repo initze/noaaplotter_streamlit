@@ -10,7 +10,7 @@ requires-python = ">=3.9"
 dependencies = [
     "streamlit>=1.40",
     "noaaplotter @ git+https://github.com/initze/noaaplotter.git",
-    "numpy>=2.2,<3",
+    "numpy>=2,<3",
 ]
 
 [tool.setuptools.packages.find]
