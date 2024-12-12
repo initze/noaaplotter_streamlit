@@ -11,6 +11,7 @@ dependencies = [
     "streamlit>=1.40",
     "noaaplotter @ git+https://github.com/initze/noaaplotter.git",
     "numpy>=2,<3",
+    "noaaplotter_streamlit @ git+https://github.com/initze/noaaplotter_streamlit.git"
 ]
 
 [tool.setuptools.packages.find]
