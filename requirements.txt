@@ -1,0 +1,4 @@
+streamlit>=1.40
+noaaplotter @ git+https://github.com/initze/noaaplotter.git
+numpy>=2,<3
+setuptools
