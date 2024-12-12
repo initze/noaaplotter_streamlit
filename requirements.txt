@@ -1,3 +1,3 @@
 streamlit>=1.40
 noaaplotter @ git+https://github.com/initze/noaaplotter.git
-numpy>=2.2,<3
+numpy>=2,<3
