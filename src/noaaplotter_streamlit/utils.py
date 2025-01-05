@@ -150,7 +150,7 @@ def load_data(
     if dataset_selector == "NOAA station":
         # get stations
         station_id = stations[station_name]
-        data_file = f"NOAA_{station_id}.csv"
+        data_file = f"NOAA_{station_id}.parquet"
         n_jobs = 3
         try:
             download_from_noaa(
