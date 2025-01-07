@@ -10,7 +10,7 @@ requires-python = ">=3.9"
 license = "MIT"
 dependencies = [
     "streamlit>=1.40",
-    "noaaplotter @ git+https://github.com/initze/noaaplotter.git@v0.5.3",
+    "noaaplotter @ git+https://github.com/initze/noaaplotter.git@v0.5.4",
     "numpy>=2,<3",
     "setuptools"
 ]
