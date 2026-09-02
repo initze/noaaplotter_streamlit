@@ -4,14 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noaaplotter_streamlit"
-version = "0.0.11"
+version = "0.1.0"
 description = "This is a Streamlit app utilizing the noaaplotter package"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 license = "MIT"
 dependencies = [
     "streamlit>=1.40",
-    "noaaplotter @ git+https://github.com/initze/noaaplotter.git@v0.5.4",
-    "numpy>=2,<3",
+    # modernized backend: polars core, plotly engine, NOAA + coordinate (Open-Meteo/CDS) sources.
+    # switch back to @main once feat/modernization is merged
+    "noaaplotter @ git+https://github.com/initze/noaaplotter.git@feat/modernization",
     "setuptools"
 ]
 authors = [

@@ -5,7 +5,7 @@ from noaaplotter.noaaplotter import NOAAPlotter
 
 try:
     from noaaplotter_streamlit.utils import *
-except:
+except:  # pragma: no cover - run from repo root without install
     from src.noaaplotter_streamlit.utils import *
 
 
@@ -15,14 +15,13 @@ def main():
     path = "stations.z"
     stations = load_stations_from_pickle(path)
 
-    API_TOKEN = os.environ["NOAA_API_TOKEN"]
-
     # containers
     container_selectors = st.container()
     columns_main = container_selectors.columns(2)
     # widgets
     dataset_selector = columns_main[0].selectbox(
-        "Choose your data source type", ["NOAA station", "ERA5"]
+        "Choose your data source type",
+        ["NOAA station", "ERA5 (reanalysis, by coordinates)"],
     )
     refperiod_selector = columns_main[0].selectbox(
         "Choose your climate reference period", ["1981-2010", "1991-2020"]
@@ -30,15 +29,20 @@ def main():
     product_selector = columns_main[0].selectbox(
         "Choose your plot type", ["daily", "monthly"]
     )
+    interactive_selector = columns_main[0].selectbox(
+        "Figure type", ["interactive (plotly)", "static (matplotlib)"]
+    )
     location_container = columns_main[1].container()
     station_name = location_container.selectbox(
-        "Select Your Station (NOAA Stations only)",
+        "Select Your Station (NOAA stations only)",
         list(stations.keys()),
-        disabled=False,
+        disabled=(dataset_selector != "NOAA station"),
     )
 
     coordinates_field = location_container.text_input(
-        "Please Insert Coordinates: LAT, LON (ERA5 only)"
+        "Please Insert Coordinates: LAT, LON (reanalysis only)",
+        placeholder="71, 120",
+        disabled=(dataset_selector != "ERA5 (reanalysis, by coordinates)"),
     )
     infotype_selector = columns_main[1].selectbox(
         "Choose your Information Type (monthly only)",
@@ -85,21 +89,32 @@ def main():
         st.session_state.process_started = True
 
     if st.session_state.process_started:
+        if dataset_selector == "ERA5 (reanalysis, by coordinates)":
+            if "," not in (coordinates_field or "").replace(" ", ""):
+                st.warning(
+                    "Please enter coordinates as LAT, LON (e.g. `71, 120`) "
+                    "and press Start Process again."
+                )
+                st.session_state.process_started = False
+                return
+
         # Load the data using the cached function and pass 'stations' as an argument
-        data_file, station_name = load_data(
+        data_file, label = load_data(
             dataset_selector,
             download_start,
             download_end,
             stations,
-            API_TOKEN,
+            os.environ.get("NOAA_API_TOKEN", ""),
             station_name,
             coordinates_field,
         )
 
+        engine = "plotly" if interactive_selector.startswith("interactive") else "matplotlib"
+
         # plotting
         n = NOAAPlotter(
             data_file,
-            location=station_name,
+            location=label,
             climate_filtersize=7,
             climate_start=ref_start_date,
             climate_end=ref_end_date,
@@ -108,37 +123,32 @@ def main():
             figure = n.plot_weather_series(
                 start_date=start_string,
                 end_date=end_string,
-                show_snow_accumulation=False,
+                show_snow_accumulation=True,
                 plot_extrema=True,
                 show_plot=False,
-                title=station_name,
+                title=label,
                 return_plot=True,
+                engine=engine,
             )
-            # Display the plot
-            figure_placeholder = st.empty()
-            figure_placeholder.pyplot(fig=figure, clear_figure=None)
+            if engine == "plotly":
+                st.plotly_chart(figure, use_container_width=True)
+            else:
+                st.pyplot(figure, clear_figure=True)
         else:
-            figure_t = n.plot_monthly_barchart(
+            figure = n.plot_monthly_barchart(
                 start_date=start_string,
                 end_date=end_string,
-                information="Temperature",
+                information=infotype_selector,
                 anomaly=True,
                 trailing_mean=12,
                 show_plot=False,
                 return_plot=True,
+                engine=engine,
             )
-
-            figure_p = n.plot_monthly_barchart(
-                start_date=start_string,
-                end_date=end_string,
-                information="Precipitation",
-                anomaly=True,
-                trailing_mean=12,
-                show_plot=False,
-                return_plot=True,
-            )
-            st.pyplot(fig=figure_t, clear_figure=None)
-            st.pyplot(fig=figure_p, clear_figure=None)
+            if engine == "plotly":
+                st.plotly_chart(figure, use_container_width=True)
+            else:
+                st.pyplot(figure, clear_figure=True)
 
 
 if __name__ == "__main__":

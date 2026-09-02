@@ -1,8 +1,12 @@
 import datetime
+import os
 
 import pandas as pd
 import streamlit as st
-from noaaplotter.utils.download_utils import download_era5_from_gee, download_from_noaa
+from noaaplotter.utils.config import get_noaa_token
+from noaaplotter.utils.download_utils import download_from_noaa
+from noaaplotter.sources import fetch_open_meteo
+from noaaplotter.sources.open_meteo import save_to_parquet
 
 
 def date_picker_start(label):
@@ -150,7 +154,13 @@ def load_data(
     if dataset_selector == "NOAA station":
         # get stations
         station_id = stations[station_name]
-        data_file = f"NOAA_{station_id}.csv"
+        token = get_noaa_token(API_TOKEN or "")
+        if not token:
+            raise ValueError(
+                "No NOAA API token found. Set NOAA_API_TOKEN in the environment "
+                "(or a local .env file), then press Start Process again."
+            )
+        data_file = f"NOAA_{station_id}.parquet"
         n_jobs = 3
         try:
             download_from_noaa(
@@ -160,10 +170,10 @@ def load_data(
                 ["TMIN", "TMAX", "PRCP", "SNOW"],
                 station_name,
                 station_id,
-                API_TOKEN,
+                token,
                 n_jobs=n_jobs,
             )
-        except:
+        except Exception:
             n_jobs = 1
             download_from_noaa(
                 data_file,
@@ -172,16 +182,18 @@ def load_data(
                 ["TMIN", "TMAX", "PRCP", "SNOW"],
                 station_name,
                 station_id,
-                API_TOKEN,
+                token,
             )
-    elif dataset_selector == "ERA5":
-        """ERA5 data loading may take up to 5 minutes"""
+    elif dataset_selector.startswith("ERA5"):
+        """ERA5 reanalysis via Open-Meteo Archive (daily, no API key, ~10-60 s)"""
         lat, lon = coordinates_field.replace(" ", "").split(",")
-        data_file = f"ERA5_{lat}_{lon}.csv"
-        station_name = None
-        download_era5_from_gee(
-            float(lat), float(lon), download_end, download_start, data_file
-        )
+        lat, lon = map(float, (lat, lon))
+        label = coordinates_field.replace(" ", "").replace(",", "x")
+        data_file = f"open_meteo_{lat}_{lon}.parquet"
+        if not os.path.exists(data_file):
+            df = fetch_open_meteo(lat, lon, download_start, download_end, name=label)
+            save_to_parquet(df, data_file)
+        return data_file, label
     return data_file, station_name
 
 
