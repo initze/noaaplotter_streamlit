@@ -131,7 +131,7 @@ def main():
                 engine=engine,
             )
             if engine == "plotly":
-                st.plotly_chart(figure, use_container_width=True)
+                st.plotly_chart(figure, width='stretch')
             else:
                 st.pyplot(figure, clear_figure=True)
         else:
@@ -146,7 +146,7 @@ def main():
                 engine=engine,
             )
             if engine == "plotly":
-                st.plotly_chart(figure, use_container_width=True)
+                st.plotly_chart(figure, width='stretch')
             else:
                 st.pyplot(figure, clear_figure=True)
 
