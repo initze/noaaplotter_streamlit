@@ -10,8 +10,7 @@ requires-python = ">=3.11"
 license = "MIT"
 dependencies = [
     "streamlit>=1.40",
-    # modernized backend: polars core, plotly engine, NOAA + coordinate (Open-Meteo/CDS) sources.
-    # switch back to @main once feat/modernization is merged
+    # noaaplotter pinned to a released tag; bump the tag here when a new release is out
     "noaaplotter @ git+https://github.com/initze/noaaplotter.git@v0.6.1",
     "setuptools",
 ]
