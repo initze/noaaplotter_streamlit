@@ -11,7 +11,7 @@ license = "MIT"
 dependencies = [
     "streamlit>=1.40",
     # noaaplotter pinned to a released tag; bump the tag here when a new release is out
-    "noaaplotter @ git+https://github.com/initze/noaaplotter.git@v0.6.1",
+    "noaaplotter @ git+https://github.com/initze/noaaplotter.git@v0.6.3",
     "setuptools",
 ]
 authors = [
